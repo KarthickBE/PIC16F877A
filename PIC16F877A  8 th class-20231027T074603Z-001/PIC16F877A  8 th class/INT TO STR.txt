@@ -1,0 +1,51 @@
+#include<pic.h>
+#include<stdio.h>
+
+void display(int x,int y);
+void delay();
+
+#define RS RD0
+#define RW RD1
+#define EN RD2
+
+int main()
+{
+int a=1023;
+
+char arr[10],i;
+
+TRISD=TRISC=0;
+
+display(0x0e,0);
+display(0x38,0);
+display(0x80,0);
+
+sprintf(arr,"%d",a);
+
+for(i=0;arr[i]!='\0';i++)
+{
+display(arr[i],1);
+}
+
+while(1)
+{
+}	
+	
+	
+}
+
+void display(int x,int y)
+{
+PORTC=x;
+RS=y;
+RW=0;
+EN=1;
+delay();
+EN=0;
+}
+
+void delay()
+{
+int i;
+for(i=0;i<10000;i++);
+}

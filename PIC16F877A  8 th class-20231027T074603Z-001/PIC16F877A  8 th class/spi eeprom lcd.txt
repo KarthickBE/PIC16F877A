@@ -1,0 +1,136 @@
+#include<pic.h>
+
+//sub function
+void write_to_eeprom(unsigned char msb,unsigned char lsb,unsigned char data);
+void read_from_eeprom(unsigned char msb,unsigned char lsb);
+void spi_write(unsigned int value);
+unsigned char spi_read();
+void delay();
+void display(char x,int y);
+
+#define rs RB5
+#define rw RB6
+#define en RB7
+
+
+
+void main()
+{
+      //PIN CONFIQURATION
+TRISC3=0;      //SCK OUTPUT
+TRISC4=1;     //MISO AS INPUT(SDI)
+TRISC5=0;      //MOSI AS OUTPUT(SDO)
+TRISC6=1;      //SW INPUT
+
+      //lcd outputs
+TRISB=0x00;
+TRISD=0X00;
+
+SSPCON=0X20;
+SSPSTAT=0X00;
+
+      //write function
+
+RB0=0;               //write enable
+spi_write(0x06);
+RB0=1;
+
+delay();
+	
+write_to_eeprom(0x03,0x43,'A');  //msb //lsb //data
+
+delay();
+
+
+RB0=0;               //write disable
+spi_write(0x04);
+RB0=1;	
+
+delay();
+
+
+
+read_from_eeprom(0x03,0x43);
+
+while(1)
+{
+
+}
+
+}
+	
+void write_to_eeprom(unsigned char msb,unsigned char lsb,unsigned char data)
+{
+RB0=0;
+spi_write(0x02);
+spi_write(msb);
+spi_write(lsb);
+spi_write(data);
+
+RB0=1;
+
+}
+
+
+void read_from_eeprom(unsigned char msb,unsigned char lsb)
+{
+RB0=0;
+spi_write(0x03);   //read sequence
+spi_write(msb);
+spi_write(lsb);
+
+while(!BF);  //wait untill buffer full
+char a=(spi_read());
+
+
+display(0x0e,0);
+RB0=1;
+
+
+while(1)
+{
+if(RC6==1)
+{
+display(0x80,0);
+display(a,1);
+}
+
+}
+
+
+
+
+}
+
+
+void spi_write(unsigned int value)	
+{
+SSPBUF=value;
+while(!BF);	
+}
+
+unsigned char spi_read()
+{
+SSPBUF=0X00;
+while(!SSPIF);
+return(SSPBUF);
+}
+
+void delay()
+{
+int i;
+for(i=0;i<30000;i++);
+}
+
+
+
+
+void display(char x,int y)
+{
+PORTD=x;
+rs=y;
+rw=0;
+en=1;
+delay();
+en=0;
+}	

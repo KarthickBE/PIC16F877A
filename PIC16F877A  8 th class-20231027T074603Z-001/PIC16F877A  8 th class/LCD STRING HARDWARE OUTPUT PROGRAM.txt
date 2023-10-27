@@ -1,0 +1,49 @@
+#include<pic.h>
+#define _XTAL_FREQ 20000000
+__CONFIG(0x3F3A);
+
+
+
+#define RS RD5
+//#define RW RD6
+#define EN RD7
+
+char name[]={"KARTHICK BE"};
+
+void delay()
+{
+	int i;
+	for(i=0;i<=10000;i++);
+}
+
+void display(int x,int y)
+{
+	PORTB=x;
+	RS=y;
+	//RW=0;
+	EN=1;
+	delay();
+	EN=0;
+}
+void main()
+{
+	TRISB=0X00;
+    TRISD=0X00;
+
+	int j;
+	display(0x38,0);
+	display(0x80,0);
+	display(0x0E,0);
+
+
+
+	delay();
+
+	for(j=0;name[j]!='\0';j++)
+	{
+	 display(name[j],1);
+	}
+
+	delay();
+}
+	

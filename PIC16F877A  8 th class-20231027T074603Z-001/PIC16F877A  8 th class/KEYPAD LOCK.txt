@@ -1,0 +1,176 @@
+#include<pic.h>
+
+void display(int x,int y); //SUB FUNCTION
+void delay();
+char keypad();
+
+#define RS RD0
+#define RW RD1
+#define EN RD2
+
+char pass[20];
+
+void main()
+{
+TRISC=0X00;
+TRISD=0X00;	
+TRISB=0X0F;
+
+
+display(0x0E,0);
+display(0x38,0);
+display(0x80,0);
+
+while(1)
+{
+pass[0]=keypad();
+pass[1]=keypad();
+pass[2]=keypad();
+pass[3]=keypad();
+
+if((pass[0]=='1')&&(pass[1]=='2')&&(pass[2]=='3')&&(pass[3]=='4'))
+{
+char name[]={"password is correct"};
+
+for(name[i]=0;name[i]!='\0';name[]++)
+{
+display(name[i],1);
+}
+
+}
+
+}
+
+}
+
+
+char keypad()
+
+{
+
+while(1)
+{
+ //***************
+RB4=1;   //MAIN INPUT
+
+RB5=0;
+RB6=0;
+RB7=0;	
+
+if(RB0==1)
+{
+while(RB0=1); // wait false
+return '1';
+}
+
+if(RB1==1)
+{
+while(RB1==1);
+return '2';
+}	
+
+if(RB2==1)
+{
+while(RB2=1);
+return '3';	
+}	
+
+//*********************
+
+RB5=1;   //MAIN INPUT
+
+RB4=0;
+RB6=0;
+RB7=0;	
+
+if(RB0==1)
+{
+while(RB0=1);
+return '4';	
+}
+
+if(RB1==1)
+{
+while(RB1==1);
+return '5';
+}	
+
+if(RB2==1)
+{
+while(RB2=1);
+return '6';	
+}	
+
+//**********************
+RB6=1;   //MAIN INPUT
+
+RB4=0;
+RB5=0;
+RB7=0;	
+
+if(RB0==1)
+{
+while(RB0=1);
+return '7';
+}
+
+if(RB1==1)
+{
+while(RB1==1);
+return '8';	
+}	
+
+if(RB2==1)
+{
+while(RB2=1);
+return '9';	
+}	
+
+//***************************
+RB7=1;   //MAIN INPUT
+
+RB4=0;
+RB5=0;
+RB6=0;	
+
+if(RB0==1)
+{
+while(RB0=1);
+return '*';	
+}
+
+if(RB1==1)
+{
+while(RB1==1);
+return '0';	
+}	
+
+if(RB2==1)
+{
+while(RB2=1);
+return '#';
+}	
+
+}
+
+}	
+	
+void display(int x,int y)
+{
+PORTC=x;
+RS=y;
+RW=0;
+EN=1;
+delay();
+EN=0;
+}
+
+void delay()
+{
+int i;
+for(i=0;i<10000;i++);
+}
+
+
+
+void str()

@@ -1,0 +1,48 @@
+#include<pic.h>
+#define  led RB0
+#define  sw RC7
+
+
+
+void main()
+{              //main program open
+TRISB0=0;
+TRISC7=1;
+PORTB=0X00;
+
+int a=0;
+
+while(1)
+{            //while 1 open
+if(sw==0)
+
+a++;
+while(sw==0)
+{
+} 
+
+switch(a)
+{          //switch case open
+case 1:
+led=1;
+break;
+
+case 2:
+led=0;
+break;
+
+case 3:
+led=1;
+break;	
+	
+
+}         //switch case close
+	
+}          //while 1 close
+
+
+
+
+	
+}          //main program close
+

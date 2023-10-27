@@ -1,0 +1,95 @@
+
+#include<pic.h>
+
+#define _XTAL_FREQ 20000000
+#define TMR2PRESCALE 4
+
+long pwm_freq=5000;
+
+void pwm_initialize();            //sub function
+void adc_initialize();
+unsigned int  adc_read();
+void pwm_duty(unsigned int duty);
+void delay();
+
+
+void main()
+{
+int adc_value;
+TRISC=0X00;  //port confiquration
+TRISA=0XFF;
+adc_initialize();
+pwm_initialize();
+
+do
+{
+adc_value=adc_read();
+pwm_duty(adc_value);
+delay();
+}while(1);
+}
+
+//************sub function
+
+void pwm_initialize()
+{
+PR2=(_XTAL_FREQ/(pwm_freq*4*TMR2PRESCALE))-1;
+CCP1M3=1;    //PWM MODE
+CCP1M2=1;
+
+T2CKPS0=1;   //PRESCALE 4
+T2CKPS1=0;
+	
+TMR2ON=1;  // TMR ON
+
+TRISC=0X00;    //C PORT MAKE OUTPUT	
+	
+}
+
+//************sub function
+void adc_initialize()
+{
+ADCON0=0X41;
+ADCON1=0XC0;
+}
+
+//************sub function
+unsigned int  adc_read()
+{
+CHS2=0;
+CHS1=0;
+CHS0=0;	
+delay();
+GODONE=1;
+while(GODONE==1);
+return((ADRESH<<8)+ADRESL);
+}
+
+//************sub function
+void pwm_duty(unsigned int duty)
+{
+duty=((float)duty/1023)*PR2*4;
+CCP1X=duty&2;	//store 1 bit
+CCP1X=duty&1;   //store 0 bit
+CCPR1L=duty>>2;	
+}	
+	
+	
+void delay()
+{
+int i;
+for(i=0;i<10000;i++);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

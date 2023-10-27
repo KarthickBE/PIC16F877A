@@ -1,0 +1,58 @@
+#include<pic.h>
+void delay();
+
+void display(int x,int y);
+void delay();
+
+#define rs RC0
+#define rw RC1
+#define en RC2
+
+
+void main()
+{
+
+char data;
+
+TRISC=0x80;
+TRISB=0x00;
+
+TXSTA=0X24;
+RCSTA=0X90;
+SPBRG=64;
+
+
+
+while(1)
+{
+
+while(RCIF==0);
+RCIF=0;
+data=RCREG;
+
+display(0x0e,0);
+
+delay();
+
+display(0x80,0);
+display(data,1);	
+	
+}
+
+}
+
+void delay()
+{
+int i;
+for(i=0;i<10000;i++);	
+}
+
+void display(int x,int y)
+{
+PORTB=x;
+rs=y;
+rw=0;
+en=1;
+delay();
+en=0;
+}

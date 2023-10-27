@@ -1,0 +1,29 @@
+#include<pic.h>
+void delay();
+
+
+void main()
+{
+int data;
+TXSTA=0X24;
+RCSTA=0X90;
+SPBRG=64;
+
+while(1)
+{
+	while(RCIF==0);
+	RCIF=0;
+	data=RCREG;
+	
+	TXREG=data;
+	while(TXIF==0);
+	TXIF=0;
+	delay();	
+}
+}
+
+void delay()
+{
+int i;
+for(i=0;i<10000;i++);	
+}
